@@ -5,3 +5,10 @@
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+
+.button-cta {
+  @apply bg-primary-500 py-[10px] rounded-lg font-semibold;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -2%;
+}

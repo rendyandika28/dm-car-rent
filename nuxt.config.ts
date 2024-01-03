@@ -30,4 +30,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/styles/scss/main.scss"],
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "nuxt-icon"],
+  tailwindcss: {
+    cssPath: "./assets/styles/scss/tailwind.scss",
+  },
 });

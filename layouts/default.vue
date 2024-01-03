@@ -1,8 +1,10 @@
 <script setup lang="ts"></script>
 <template>
-  <app-header />
-  <main class="bg-primary-gray h-screen">
-    <slot />
-  </main>
+  <div class="bg-primary-gray min-h-screen">
+    <app-header />
+    <main>
+      <slot />
+    </main>
+  </div>
 </template>
 <style lang="scss" scoped></style>
