@@ -5,6 +5,7 @@
     <main>
       <slot />
     </main>
+    <app-footer />
   </div>
 </template>
 <style lang="scss" scoped></style>
