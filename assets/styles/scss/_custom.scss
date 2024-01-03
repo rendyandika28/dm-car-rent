@@ -10,10 +10,8 @@ body {
   @apply bg-primary-500 py-[10px] rounded-lg font-semibold px-7;
   @apply md:px-5;
   color: white;
-  font-size: 1rem;
   line-height: 1.5rem;
   letter-spacing: -2%;
-
   font-size: 0.75rem;
   @media screen and (min-width: 768px) {
     font-size: 1rem;

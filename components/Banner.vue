@@ -14,6 +14,10 @@ const props = defineProps({
     type: String,
     default: "#3563E9",
   },
+  noCta: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const backgroundPath = computed<StyleValue>(() => {
@@ -43,7 +47,11 @@ const backgroundPath = computed<StyleValue>(() => {
         Ease of doing a car rental safely and reliably. Of course at a low
         price.
       </h4>
-      <button class="button-cta" :style="{ backgroundColor: props.btnColor }">
+      <button
+        v-if="!noCta"
+        class="button-cta"
+        :style="{ backgroundColor: props.btnColor }"
+      >
         Rental Car
       </button>
     </div>

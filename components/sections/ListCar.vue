@@ -8,6 +8,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  hasHorizontalLayoutCard: {
+    type: Boolean,
+    default: false,
+  },
+  scrollableList: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 <template>
@@ -18,15 +26,8 @@ const props = defineProps({
         >View All</nuxt-link
       >
     </div>
-    <div class="list-car__items">
-      <car-card />
-      <car-card />
-      <car-card />
-      <car-card />
-      <car-card />
-      <car-card />
-      <car-card />
-      <car-card />
+    <div class="list-car__items" :class="scrollableList && 'scrollable-list'">
+      <car-card v-for="_ in 8" :key="_" />
     </div>
   </section>
 </template>
@@ -48,6 +49,20 @@ const props = defineProps({
     @apply sm:grid-cols-2;
     @apply lg:grid-cols-3;
     @apply xl:grid-cols-4;
+  }
+}
+
+.scrollable-list.list-car__items {
+  @media screen and (max-width: 1280px) {
+    @apply flex flex-row overflow-scroll no-scrollbar;
+
+    .car-card {
+      @apply flex-none w-9/12 lg:w-7/12;
+
+      &__info {
+        @apply justify-around;
+      }
+    }
   }
 }
 </style>

@@ -1,7 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const currentPath = computed<string>(() => useRoute().path);
+</script>
 <template>
-  <header>
-    <h1 class="logo">DM</h1>
+  <header :class="currentPath === '/' ? 'pb-[9.25rem]' : 'pb-8'">
+    <nuxt-link to="/">
+      <h1 class="logo">DM</h1>
+    </nuxt-link>
     <div class="search-wrapper">
       <Icon class="search-icon" name="ep:search" color="#596780" size="24" />
       <input type="search" name="cars" id="cars" />
@@ -15,8 +19,8 @@
 </template>
 <style lang="scss" scoped>
 header {
-  @apply border flex items-center justify-between px-6 py-8 flex-wrap pb-[9.25rem] bg-white;
-  @apply md:px-[3.75rem] md:py-0 md:flex-nowrap md:h-[7.75rem] md:gap-8 md:pb-0;
+  @apply border flex items-center justify-between px-6 pt-8 flex-wrap bg-white;
+  @apply md:px-[3.75rem] md:pt-0 md:flex-nowrap md:h-[7.75rem] md:gap-8 md:pb-0;
   h1.logo {
     @apply text-primary-500 font-bold w-[9.25rem] order-1;
     @apply md:text-center;
