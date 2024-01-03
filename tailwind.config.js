@@ -9,7 +9,9 @@ export default {
         "secondary": "#596780",
         "gray": {
           "border": "#C3D4E966"
-        }
+        },
+        "title-secondary": "#1A202C",
+        "title-muted": "#90A3BF"
       }
     },
   },

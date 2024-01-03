@@ -84,18 +84,13 @@ const backgroundPath = computed<StyleValue>(() => {
   &__image {
     @apply flex justify-center;
     img {
-      @apply max-w-[12.25rem];
+      @apply max-w-[12.25rem] w-full;
       @apply md:max-w-[25.375rem];
     }
   }
 
   & button {
-    @apply w-fit px-7 mt-2;
-    @apply md:px-5;
-    @media screen and (min-width: 768px) {
-      font-size: 1rem;
-    }
-    font-size: 0.75rem;
+    @apply w-fit mt-2;
   }
 }
 </style>
