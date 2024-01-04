@@ -1,12 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
   app: {
     head: {
       htmlAttrs: {
         lang: "en",
       },
       link: [
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon-32x32.png",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "16x16x",
+          href: "/favicon-16x16.png",
+        },
         {
           rel: "preconnect",
           href: "https://fonts.googleapis.com",
@@ -29,7 +40,27 @@ export default defineNuxtConfig({
     },
   },
   css: ["~/assets/styles/scss/main.scss"],
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "nuxt-icon"],
+  modules: [
+    "@vueuse/nuxt",
+    "@nuxtjs/tailwindcss",
+    "nuxt-icon",
+    [
+      "@pinia/nuxt",
+      {
+        autoImports: ["defineStore", "storeToRefs"],
+      },
+    ],
+  ],
+  runtimeConfig: {
+    apiUrl: process.env.NUXT_API_URL || "",
+    public: {
+      siteTitle: process.env.NUXT_PUBLIC_SITE_TITLE || "DM Rent Car",
+    },
+  },
+  imports: {
+    // Auto-import pinia stores defined in `~/stores`
+    dirs: ["stores"],
+  },
   tailwindcss: {
     cssPath: "./assets/styles/scss/tailwind.scss",
   },

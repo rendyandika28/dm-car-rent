@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { StyleValue } from "vue";
+import type { PropType, StyleValue } from "vue";
+import type { Car } from "~/types/responses/car_response_type";
 
 const props = defineProps({
   color: {
@@ -17,6 +18,14 @@ const props = defineProps({
   noCta: {
     type: Boolean,
     default: false,
+  },
+  car: {
+    type: Object as PropType<Car>,
+    required: true,
+  },
+  maxWidthContent: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -41,22 +50,28 @@ const backgroundPath = computed<StyleValue>(() => {
 </script>
 <template>
   <div class="banner" :style="backgroundPath">
-    <div class="banner__wrapper">
+    <div
+      class="banner__wrapper"
+      :style="{
+        maxWidth: maxWidthContent ? `${maxWidthContent}px` : 'revert-layer',
+      }"
+    >
       <h3 class="banner__title">The Best Platform for Car Rental</h3>
       <h4 class="banner__desc">
         Ease of doing a car rental safely and reliably. Of course at a low
         price.
       </h4>
-      <button
+      <nuxt-link
         v-if="!noCta"
-        class="button-cta"
+        :to="`/cars/${car?.id}`"
+        class="button-cta w-fit"
         :style="{ backgroundColor: props.btnColor }"
       >
         Rental Car
-      </button>
+      </nuxt-link>
     </div>
     <div class="banner__image">
-      <img src="/car.png" alt="car" />
+      <img :src="car?.img" alt="car" />
     </div>
   </div>
 </template>

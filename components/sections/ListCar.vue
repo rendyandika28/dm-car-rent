@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Car } from "~/types/responses/car_response_type";
+
 const props = defineProps({
   title: {
     type: String,
@@ -16,6 +18,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  cars: {
+    type: Array as PropType<Car[] | null>,
+    default: () => [],
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 <template>
@@ -26,9 +36,17 @@ const props = defineProps({
         >View All</nuxt-link
       >
     </div>
-    <div class="list-car__items" :class="scrollableList && 'scrollable-list'">
-      <car-card v-for="_ in 8" :key="_" />
+    <div
+      class="list-car__items"
+      :class="scrollableList && 'scrollable-list'"
+      v-if="cars?.length"
+    >
+      <car-card v-for="car in cars" :key="car.id" :car="car" />
     </div>
+    <p v-else-if="loading" class="text-secondary text-center p-8">
+      Loading cars...
+    </p>
+    <p v-else class="text-secondary text-center p-8">There's no car found</p>
   </section>
 </template>
 <style lang="scss" scoped>

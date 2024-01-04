@@ -1,20 +1,39 @@
 <script setup lang="ts">
+import type { Car } from "~/types/responses/car_response_type";
+
 const instance = getCurrentInstance();
 const hasHorizontalLayoutCard = computed<boolean>(
   () => instance?.parent?.props.hasHorizontalLayoutCard as boolean
 );
+
+const props = defineProps({
+  car: {
+    type: Object as PropType<Car | null>,
+    default: () => [],
+  },
+});
+
+const { toggleCarAsFavorite } = useCarStore();
+const { favoriteCars } = storeToRefs<any>(useCarStore());
 </script>
 <template>
   <div class="car-card">
     <div class="car-card__header">
       <div class="car-card__header-title">
-        <h5>Koenigsegg</h5>
-        <h6>Sport</h6>
+        <h5>{{ car?.name }}</h5>
+        <h6>{{ car?.type }}</h6>
       </div>
-      <button class="car-card__header-favorite">
+      <button
+        @click="toggleCarAsFavorite(car)"
+        class="car-card__header-favorite"
+      >
         <Icon
-          name="ant-design:heart-filled"
-          color="red"
+          :name="
+            car?.isFavorite
+              ? `ant-design:heart-filled`
+              : `ant-design:heart-outlined`
+          "
+          :color="car?.isFavorite ? `#ED3F3F` : '#90A3BF'"
           size="24"
           :class="hasHorizontalLayoutCard && 'favorite-icon'"
         />
@@ -24,14 +43,14 @@ const hasHorizontalLayoutCard = computed<boolean>(
     <!-- Main card wrapper -->
     <div :class="hasHorizontalLayoutCard && 'horizontal-layout'">
       <div class="car-card__content">
-        <img src="/car.png" alt="car" />
+        <img :src="car?.img" alt="car" />
         <div class="car-card__content-overlay"></div>
       </div>
 
       <div class="car-card__info">
         <div class="car-card__info-item">
           <Icon name="ph:gas-pump-fill" color="#90A3BF" size="24" />
-          <h6>90L</h6>
+          <h6>{{ car?.gasolineLiter }}L</h6>
         </div>
         <div class="car-card__info-item">
           <Icon
@@ -39,11 +58,11 @@ const hasHorizontalLayoutCard = computed<boolean>(
             color="#90A3BF"
             size="24"
           />
-          <h6>Manual</h6>
+          <h6>{{ car?.kindOfTransition }}</h6>
         </div>
         <div class="car-card__info-item">
           <Icon name="ph:users-fill" color="#90A3BF" size="24" />
-          <h6>2 People</h6>
+          <h6>{{ car?.people }} People</h6>
         </div>
       </div>
     </div>
@@ -51,12 +70,14 @@ const hasHorizontalLayoutCard = computed<boolean>(
     <div class="car-card__footer">
       <div class="flex flex-col">
         <div class="car-card__footer-price">
-          <h6>$99.00/</h6>
+          <h6>${{ car?.pricePerDay }}.00/</h6>
           <span>&nbsp;day</span>
         </div>
         <span v-if="false" class="line-through">$80.00</span>
       </div>
-      <button class="button-cta">Rent Now</button>
+      <nuxt-link :to="`cars/${car?.id}`" class="button-cta">
+        Rent Now
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -122,7 +143,7 @@ const hasHorizontalLayoutCard = computed<boolean>(
       font-size: 0.875rem;
     }
 
-    button {
+    a {
       border-radius: 0.25rem;
     }
   }

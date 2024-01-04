@@ -1,57 +1,102 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const route = useRoute();
+
+const { getDetailCar, getCars } = useCar();
+const { toggleCarAsFavorite } = useCarStore();
+const { favoriteCars } = storeToRefs<any>(useCarStore());
+
+const { data: car, error } = await getDetailCar(route.params.slug as string);
+const { data: cars } = await getCars(
+  ref({
+    page: 1,
+    q: "",
+  })
+);
+
+if (!error.value) {
+  if (favoriteCars.value.includes(car.value.id)) {
+    car.value.isFavorite = true;
+  }
+}
+
+const showedImage = ref<string>(car.value.img);
+</script>
 <template>
   <div class="detail-car">
     <div class="detail-car__infos">
       <div class="detail-car__infos-images">
         <div class="showing">
-          <img src="/car.png" alt="car" />
+          <Banner
+            v-if="showedImage === car?.img"
+            :max-width-content="372"
+            color="#3563E9"
+            path="arrow"
+            no-cta
+            :car="car"
+          />
+          <img v-else :src="showedImage" alt="car-image" />
         </div>
         <div class="detail-car__infos-images-list">
-          <button class="selected">
-            <img src="/car.png" alt="car" />
-          </button>
-          <button>
-            <img src="/View 2.png" alt="car" />
-          </button>
-          <button>
-            <img src="/View 3.png" alt="car" />
+          <button
+            v-for="img in [{ url: car.img }, ...car?.images]"
+            :key="img"
+            @click="showedImage = img.url"
+            :class="showedImage === img.url ? 'selected' : ''"
+          >
+            <img :src="img.url" :alt="img.url" class="size-full object-cover" />
           </button>
         </div>
       </div>
       <div class="detail-car__infos-specs">
-        <div>
-          <h2>Nissan GT - R</h2>
-          <div class="detail-car__infos-specs-rating">
-            <div class="flex gap-1">
-              <Icon
-                name="bi:star-fill"
-                color="#FBAD39"
-                class="size-4 md:size-4"
-              />
-              <Icon
-                name="bi:star-fill"
-                color="#FBAD39"
-                class="size-4 md:size-4"
-              />
-              <Icon
-                name="bi:star-fill"
-                color="#FBAD39"
-                class="size-4 md:size-4"
-              />
-              <Icon
-                name="bi:star-fill"
-                color="#FBAD39"
-                class="size-4 md:size-4"
-              />
-              <Icon name="bi:star" color="#90A3BF" class="size-4 md:size-4" />
+        <div class="flex items-start flex-row gap-2">
+          <div>
+            <h2>{{ car?.name }}</h2>
+            <div class="detail-car__infos-specs-rating">
+              <div class="flex gap-1">
+                <Icon
+                  name="bi:star-fill"
+                  color="#FBAD39"
+                  class="size-4 md:size-4"
+                />
+                <Icon
+                  name="bi:star-fill"
+                  color="#FBAD39"
+                  class="size-4 md:size-4"
+                />
+                <Icon
+                  name="bi:star-fill"
+                  color="#FBAD39"
+                  class="size-4 md:size-4"
+                />
+                <Icon
+                  name="bi:star-fill"
+                  color="#FBAD39"
+                  class="size-4 md:size-4"
+                />
+                <Icon name="bi:star" color="#90A3BF" class="size-4 md:size-4" />
+              </div>
+              <span>440+ Reviewer</span>
             </div>
-            <span>440+ Reviewer</span>
           </div>
+
+          <button
+            @click="toggleCarAsFavorite(car)"
+            class="car-card__header-favorite"
+          >
+            <Icon
+              :name="
+                car?.isFavorite
+                  ? `ant-design:heart-filled`
+                  : `ant-design:heart-outlined`
+              "
+              :color="car?.isFavorite ? `#ED3F3F` : '#90A3BF'"
+              size="24"
+            />
+          </button>
         </div>
 
         <p>
-          NISMO has become the embodiment of Nissan's outstanding performance,
-          inspired by the most unforgiving proving ground, the "race track".
+          {{ car?.description }}
         </p>
 
         <div
@@ -59,26 +104,26 @@
         >
           <div class="detail-car__feat">
             <h5>Type Car</h5>
-            <h5 class="font-semibold">Sport</h5>
+            <h5 class="font-semibold">{{ car?.type }}</h5>
           </div>
           <div class="detail-car__feat">
             <h5>Capacity</h5>
-            <h5 class="font-semibold">2 Person</h5>
+            <h5 class="font-semibold">{{ car?.people }} Person</h5>
           </div>
           <div class="detail-car__feat">
             <h5>Gasoline</h5>
-            <h5 class="font-semibold">70L</h5>
+            <h5 class="font-semibold">{{ car?.gasolineLiter }}L</h5>
           </div>
           <div class="detail-car__feat">
             <h5>Steering</h5>
-            <h5 class="font-semibold">Manual</h5>
+            <h5 class="font-semibold">{{ car?.kindOfTransition }}</h5>
           </div>
         </div>
 
         <div class="detail-car__infos-footer">
           <div class="flex flex-col">
             <div class="detail-car__infos-footer-price">
-              <h6>$99.00/</h6>
+              <h6>${{ car?.pricePerDay }}.00/</h6>
               <span>&nbsp;days</span>
             </div>
             <span v-if="false" class="line-through">$80.00</span>
@@ -91,6 +136,7 @@
       <sections-list-car
         title="Recommendation Car"
         has-horizontal-layout-card
+        :cars="cars.data"
       />
     </div>
   </div>
@@ -111,7 +157,10 @@
       }
 
       & .showing {
-        @apply h-[22.5rem] bg-white rounded-xl grid place-items-center mb-6;
+        @apply min-h-[22.5rem] h-fit bg-white rounded-xl grid place-items-center mb-6;
+        img {
+          @apply size-full object-cover rounded-xl;
+        }
       }
 
       &-list {
@@ -119,6 +168,10 @@
 
         button {
           @apply bg-transparent outline-none rounded-xl size-full;
+
+          img {
+            @apply rounded-xl;
+          }
         }
         & .selected {
           @apply border-2 border-blue-700;

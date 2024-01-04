@@ -1,5 +1,13 @@
 <script setup lang="ts">
 const currentPath = computed<string>(() => useRoute().path);
+const { querySearch, isSelectFavorites } = storeToRefs<any>(useCarStore());
+
+const query = computed({
+  get: () => querySearch.value,
+  set: (val) => {
+    querySearch.value = val;
+  },
+});
 </script>
 <template>
   <header :class="currentPath === '/' ? 'pb-[9.25rem]' : 'pb-8'">
@@ -8,11 +16,21 @@ const currentPath = computed<string>(() => useRoute().path);
     </nuxt-link>
     <div class="search-wrapper">
       <Icon class="search-icon" name="ep:search" color="#596780" size="24" />
-      <input type="search" name="cars" id="cars" />
+      <input
+        placeholder="Search something here"
+        v-model="query"
+        type="search"
+        name="cars"
+        id="cars"
+      />
     </div>
     <div class="favorite-wrapper">
-      <button class="favorite">
-        <Icon name="ant-design:heart-filled" color="#596780" size="24" />
+      <button class="favorite" @click="isSelectFavorites = !isSelectFavorites">
+        <Icon
+          name="ant-design:heart-filled"
+          :color="isSelectFavorites ? '#ED3F3F' : '#596780'"
+          size="24"
+        />
       </button>
     </div>
   </header>

@@ -3,9 +3,11 @@
   <div class="bg-primary-gray min-h-screen">
     <app-header />
     <main>
+      <CarResultList />
       <slot />
     </main>
     <app-footer />
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
