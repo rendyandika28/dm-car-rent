@@ -21,7 +21,7 @@ To get started with the DM Car Rent Website, follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/car-rent-nuxt3.git
+git clone https://github.com/rendyandika28/dm-car-rent
 cd car-rent-nuxt3
 ```
 
